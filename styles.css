@@ -1,13 +1,64 @@
-.board-overlay {
+/* Move Highlighting Styles for Lichess */
+
+/* Legal move indicator circle */
+.legal-move-indicator {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 4px;
+    width: 8px;
+    height: 8px;
+    background-color: rgba(100, 200, 100, 0.8);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.8;
+    pointer-events: none;
+    box-shadow: 0 0 4px rgba(100, 200, 100, 0.6);
 }
 
+/* Highlight for legal moves */
+[data-square].move-highlight {
+    background-color: rgba(100, 200, 100, 0.3) !important;
+    opacity: 0.8;
+}
+
+/* Highlight for last move squares */
+[data-square].last-move-highlight {
+    background-color: rgba(200, 200, 100, 0.4) !important;
+    opacity: 0.8;
+}
+
+/* Captured piece highlight */
+[data-square].capture-highlight {
+    background-color: rgba(255, 100, 100, 0.4) !important;
+    opacity: 0.8;
+}
+
+/* Selected square */
+[data-square].selected {
+    background-color: rgba(150, 150, 255, 0.5) !important;
+    border: 2px solid rgba(150, 150, 255, 0.8);
+}
+
+/* Move arrow overlay */
 .move-arrow {
     position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: red;
-    transform: rotate(45deg);
+    width: 3px;
+    height: 50%;
+    background-color: rgba(255, 200, 0, 0.6);
+    transform-origin: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Board overlay for analysis */
+.board-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 5;
 }

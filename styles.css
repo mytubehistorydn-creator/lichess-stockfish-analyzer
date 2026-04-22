@@ -1,0 +1,13 @@
+.board-overlay {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+}
+
+.move-arrow {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    transform: rotate(45deg);
+}

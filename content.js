@@ -1,39 +1,68 @@
-// content.js
+// content.js - Real-time move highlighting for Lichess
 
-// This script overlays a board on the page and highlights moves
+window.addEventListener('load', () => {
+    console.log('Lichess Analyzer: Initializing...');
+    initializeHighlighting();
+});
 
-// Function to create a board overlay
-function createBoardOverlay() {
-    const overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.pointerEvents = 'none'; // Allow clicks to pass through
-    overlay.style.zIndex = '9999';
+function initializeHighlighting() {
+    const board = document.querySelector('.board');
+    
+    if (!board) {
+        console.log('Board not found, retrying in 1 second...');
+        setTimeout(initializeHighlighting, 1000);
+        return;
+    }
 
-    // Add the chessboard SVG or HTML here
-    overlay.innerHTML = '<svg>...</svg>';
+    console.log('Board found! Starting move highlighting...');
 
-    document.body.appendChild(overlay);
+    // Create mutation observer to watch for move changes
+    const observer = new MutationObserver((mutations) => {
+        highlightSquares();
+    });
+
+    // Watch the entire board for changes
+    observer.observe(board, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'data-square']
+    });
+
+    // Initial highlight
+    highlightSquares();
 }
 
-// Function to highlight moves
-function highlightMoves(moves) {
-    moves.forEach(move => {
-        const moveElement = document.getElementById(move);
-        if (moveElement) {
-            moveElement.style.backgroundColor = 'yellow'; // Highlight the move
-            setTimeout(() => {
-                moveElement.style.backgroundColor = ''; // Remove highlight after some time
-            }, 2000);
+function highlightSquares() {
+    // Remove old highlights
+    document.querySelectorAll('.move-highlight, .last-move-from, .last-move-to').forEach(sq => {
+        sq.classList.remove('move-highlight');
+    });
+
+    // Highlight legal move squares
+    document.querySelectorAll('[data-square].move-dest').forEach(square => {
+        square.classList.add('move-highlight');
+        const circle = document.createElement('div');
+        circle.className = 'legal-move-indicator';
+        if (!square.querySelector('.legal-move-indicator')) {
+            square.appendChild(circle);
         }
+    });
+
+    // Highlight last move
+    document.querySelectorAll('[data-square].last-move').forEach(square => {
+        square.classList.add('last-move-highlight');
     });
 }
 
-// Initialize the overlay and move highlighting
-createBoardOverlay();
+// Toggle highlighting with Ctrl+H
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'h') {
+        const highlights = document.querySelectorAll('.move-highlight');
+        highlights.forEach(el => {
+            el.style.opacity = el.style.opacity === '0.3' ? '1' : '0.3';
+        });
+    }
+});
 
-// Example usage of highlightMoves function
-highlightMoves(['move1', 'move2']);
+console.log('Lichess Analyzer Content Script Loaded!');
